@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model BookSeries {
+  id          Int              @id @default(autoincrement())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  name        String
+  author      String
+  description String
+  status      BookSeriesStatus @default(ONGOING)
+  books       Books[]
+
+  @@unique([id])
+  @@index([name, id])
+}
+
+model Books {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  name         String
+  status       BookStatus  @default(COMPLETED)
+  chapters     Chapters[]
+  character    Character[]
+  bookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])
+  bookSeriesId Int?
+
+  @@unique([id])
+  @@index([name, id])
+}
+
+model Chapters {
+  id          Int             @id @default(autoincrement())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  title       String
+  content     String
+  status      ChapterStatus   @default(OPEN)
+  progress    ChapterProgress @default(ADDED)
+  aiProcessed Boolean         @default(false)
+  bookId      Int
+  book        Books           @relation(fields: [bookId], references: [id])
+
+  @@unique([id])
+  @@index([title, id])
+}
+
+model Character {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String?
+  color       String
+  imageUrl    String?
+
+  Books   Books? @relation(fields: [booksId], references: [id])
+  booksId Int?
+
+  @@unique([id])
+  @@index([name, id])
+}
+
+enum BookSeriesStatus {
+  COMPLETED
+  ONGOING
+  CANCELED
+}
+
+enum BookStatus {
+  COMPLETED
+  PREPUB
+  ONGOING
+  CANCELED
+}
+
+enum ChapterProgress {
+  ADDED
+  PROCESSING
+  READY
+  APPROVED
+}
+
+enum ChapterStatus {
+  OPEN
+  READING
+  READ
+}

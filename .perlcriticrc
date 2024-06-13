@@ -1,0 +1,38 @@
+severity = 3
+
+[NamingConventions::Capitalization]
+severity = 5
+subroutines = :starts_with_upper
+local_lexical_variables = :all_lower
+subroutine_exemptions = new
+local_lexical_variable_exemptions = WCE
+
+[CodeLayout::ProhibitTrailingWhitespace]
+severity = 3
+
+[ValuesAndExpressions::ProhibitMagicNumbers]
+severity = 3
+
+[Subroutines::ProhibitManyArgs]
+# decrease sevirity
+severity = 2
+
+[TestingAndDebugging::ProhibitNoStrict]
+severity = 3
+
+[-Modules::RequireVersionVar]
+[-TestingAndDebugging::RequireUseWarnings]
+[-Subroutines::ProhibitSubroutinePrototypes]
+[-ValuesAndExpressions::ProhibitConstantPragma]
+
+[TestingAndDebugging::RequireUseStrict]
+severity = 4
+
+[Perl::Critic::Policy::BuiltinFunctions::ProhibitStringyEval]
+severity = 4
+
+[Subroutines::ProhibitSubroutinePrototypes]
+severity = 4
+
+[NamingConventions::Capitalization]
+severity = 4
