@@ -67,9 +67,8 @@ model Character {
   description String?
   color       String
   imageUrl    String?
-
-  Books   Books? @relation(fields: [booksId], references: [id])
-  booksId Int?
+  Books       Books    @relation(fields: [booksId], references: [id])
+  booksId     Int
 
   @@unique([id])
   @@index([name, id])
