@@ -1,10 +1,8 @@
 import Navigation from '@/components/navigation';
 
 export default function RootLayout({
-   modal,
    children,
 }: Readonly<{
-   modal: React.ReactNode;
    children: React.ReactNode;
 }>) {
    return (
@@ -13,7 +11,6 @@ export default function RootLayout({
          <main className="flex grow justify-center">
             <div className="w-3/5 pt-2">{children}</div>
          </main>
-         {modal}
       </div>
    );
 }

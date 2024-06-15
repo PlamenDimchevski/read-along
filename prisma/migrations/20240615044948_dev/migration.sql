@@ -1,8 +1,5 @@
 -- CreateEnum
-CREATE TYPE "BookSeriesStatus" AS ENUM ('COMPLETED', 'ONGOING', 'CANCELED');
-
--- CreateEnum
-CREATE TYPE "BookStatus" AS ENUM ('COMPLETED', 'PREPUB', 'ONGOING', 'CANCELED');
+CREATE TYPE "BookStatus" AS ENUM ('COMPLETED', 'ONGOING', 'CANCELED');
 
 -- CreateEnum
 CREATE TYPE "ChapterProgress" AS ENUM ('ADDED', 'PROCESSING', 'READY', 'APPROVED');
@@ -18,7 +15,7 @@ CREATE TABLE "BookSeries" (
     "name" TEXT NOT NULL,
     "author" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "status" "BookSeriesStatus" NOT NULL DEFAULT 'ONGOING',
+    "status" "BookStatus" NOT NULL DEFAULT 'ONGOING',
 
     CONSTRAINT "BookSeries_pkey" PRIMARY KEY ("id")
 );
@@ -29,7 +26,7 @@ CREATE TABLE "Books" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "status" "BookStatus" NOT NULL DEFAULT 'COMPLETED',
+    "status" "BookStatus" NOT NULL DEFAULT 'ONGOING',
     "bookSeriesId" INTEGER,
 
     CONSTRAINT "Books_pkey" PRIMARY KEY ("id")
@@ -59,7 +56,7 @@ CREATE TABLE "Character" (
     "description" TEXT,
     "color" TEXT NOT NULL,
     "imageUrl" TEXT,
-    "booksId" INTEGER,
+    "booksId" INTEGER NOT NULL,
 
     CONSTRAINT "Character_pkey" PRIMARY KEY ("id")
 );
@@ -95,4 +92,4 @@ ALTER TABLE "Books" ADD CONSTRAINT "Books_bookSeriesId_fkey" FOREIGN KEY ("bookS
 ALTER TABLE "Chapters" ADD CONSTRAINT "Chapters_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Books"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Character" ADD CONSTRAINT "Character_booksId_fkey" FOREIGN KEY ("booksId") REFERENCES "Books"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Character" ADD CONSTRAINT "Character_booksId_fkey" FOREIGN KEY ("booksId") REFERENCES "Books"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

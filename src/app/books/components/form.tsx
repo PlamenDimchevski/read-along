@@ -27,7 +27,8 @@ export default function BookForm() {
          </select>
 
          <label className="input input-bordered flex items-center gap-2">
-            <input list="book-series-list" type="text" className="grow" placeholder="Book Series" />
+            Book Series
+            <input list="book-series-list" type="text" className="grow" placeholder="Ascendance of a Bookworm" />
             <kbd className="kbd kbd-xs">Optional</kbd>
             <datalist id="book-series-list">
                <option value="Chocolate"></option>
@@ -37,10 +38,6 @@ export default function BookForm() {
                <option value="Vanilla"></option>
             </datalist>
          </label>
-
-         <div className="modal-action">
-            <button className="btn btn-primary">Save</button>
-         </div>
       </>
    );
 }
