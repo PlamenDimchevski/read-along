@@ -16,8 +16,6 @@ export default function BooksForm() {
       route.refresh();
    };
 
-   console.log(searchParams);
-
    return (
       <form className="flex flex-wrap justify-center gap-3">
          <div className="join">
