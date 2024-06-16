@@ -1,28 +1,17 @@
-'use client';
-import { BooksType } from '@/types/books';
+import { BooksType, QueryOptions } from '@/types/books';
 import EllipsisVerticalIcon from '@heroicons/react/24/outline/esm/EllipsisVerticalIcon';
 import Link from 'next/link';
-import { useFormStatus } from 'react-dom';
-export default function BookContent({ books }: { books: BooksType[] }) {
-   const { pending } = useFormStatus();
+import { getBooks } from '../actions';
+import { notFound } from 'next/navigation';
+export default async function BookContent({ searchParams }: { searchParams: QueryOptions }) {
+   const books = await getBooks(searchParams);
 
-   if (pending) {
-      return (
-         <tbody>
-            <tr>
-               <td colSpan={6}>
-                  <div className="flex w-full flex-col gap-4">
-                     <div className="skeleton h-10 w-full"></div>
-                     <div className="skeleton h-10 w-full"></div>
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      );
+   if (!books.length) {
+      notFound();
    }
 
    return (
-      <tbody>
+      <>
          {books.map((item: BooksType, index: number) => (
             <tr className="hover" key={item.id}>
                <th>{item.id}</th>
@@ -31,7 +20,7 @@ export default function BookContent({ books }: { books: BooksType[] }) {
                <td>{item.bookSeries?.author}</td>
                <td>{item.status}</td>
                <td>
-                  <div className="dropdown dropdown-hover">
+                  <div className="dropdown dropdown-end">
                      <div tabIndex={index} role="button" className="btn m-1">
                         <EllipsisVerticalIcon className="size-6" />
                      </div>
@@ -64,6 +53,6 @@ export default function BookContent({ books }: { books: BooksType[] }) {
                </td>
             </tr>
          ))}
-      </tbody>
+      </>
    );
 }

@@ -1,7 +1,26 @@
 'use server';
 
 import db from '@/lib/db';
-import { BooksActions, BooksType, QueryOptions } from '@/types/books';
+import { BooksType, QueryOptions } from '@/types/books';
+
+export async function getTextsForSuggestions(): Promise<string[]> {
+   try {
+      const titles = await db.books.findMany({
+         select: { name: true, bookSeries: { select: { name: true, author: true } } },
+      });
+
+      return Array.from(
+         new Set(
+            titles.reduce(
+               (list: string[], item: any) => [...list, item.name, item.bookSeries?.name, item.bookSeries?.author],
+               []
+            )
+         )
+      );
+   } catch (e) {
+      return [];
+   }
+}
 
 export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]> {
    const query = searchParams.q;
@@ -48,14 +67,4 @@ export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]>
       include: { bookSeries: true },
    });
    return books;
-}
-
-export async function filterBooks(previousData: BooksActions, formData: FormData): Promise<BooksActions> {
-   const queryParameters: QueryOptions = {
-      q: formData.get('q') as string,
-      order: formData.get('order') as 'desc' | 'asc' | null,
-      searchIn: formData.get('searchIn') as string,
-   };
-   const books = await getBooks(queryParameters);
-   return { books };
 }
