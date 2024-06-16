@@ -1,8 +1,9 @@
 'use client';
+import { BooksType } from '@/types/books';
 import EllipsisVerticalIcon from '@heroicons/react/24/outline/esm/EllipsisVerticalIcon';
 import Link from 'next/link';
 import { useFormStatus } from 'react-dom';
-export default function BookContent({ books }: any) {
+export default function BookContent({ books }: { books: BooksType[] }) {
    const { pending } = useFormStatus();
 
    if (pending) {
@@ -19,9 +20,10 @@ export default function BookContent({ books }: any) {
          </tbody>
       );
    }
+
    return (
       <tbody>
-         {books.map((item: any, index: any) => (
+         {books.map((item: BooksType, index: number) => (
             <tr className="hover" key={item.id}>
                <th>{item.id}</th>
                <td>{item.name}</td>

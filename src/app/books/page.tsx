@@ -1,15 +1,20 @@
-import db from '@/lib/db';
 import BooksForm from './components/booksForm';
+import { getBooks } from './actions';
+import { BooksType, QueryOptions } from '@/types/books';
 
-function getBooksTitlesForFormSuggestions(books: any): string[] {
-   return books.reduce(
-      (list: string[], item: any) => [...list, item.name, item.bookSeries?.name, item.bookSeries?.author],
-      []
+function getBooksTitlesForFormSuggestions(books: BooksType[]): string[] {
+   return Array.from(
+      new Set(
+         books.reduce(
+            (list: string[], item: any) => [...list, item.name, item.bookSeries?.name, item.bookSeries?.author],
+            []
+         )
+      )
    );
 }
 
-export default async function BooksList() {
-   const books = await db.books.findMany({ orderBy: { createdAt: 'desc' }, include: { bookSeries: true } });
+export default async function BooksList({ searchParams }: { searchParams: QueryOptions }) {
+   const books = await getBooks(searchParams);
    const suggestionList = getBooksTitlesForFormSuggestions(books);
 
    return (

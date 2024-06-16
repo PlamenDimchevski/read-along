@@ -5,41 +5,55 @@ import { filterBooks } from '../actions';
 import BookContent from './bookContent';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { BooksType } from '@/types/books';
 
-export default function BooksForm({ books, suggestionList }: any) {
+export default function BooksForm({ books, suggestionList }: { books: BooksType[]; suggestionList: string[] }) {
    const formRef = useRef<HTMLFormElement | null>(null);
    const router = useRouter();
    const pathname = usePathname();
    const searchParams = useSearchParams();
-   const hasFilter = searchParams.has('f') || searchParams.has('q');
+   const hasFilter = searchParams.has('order') || searchParams.has('q');
    const [state, formAction] = useFormState(filterBooks, { books });
-   const [order, setOrder] = useState(searchParams.get('f') || 'empty');
+   const [order, setOrder] = useState(searchParams.get('order') || 'empty');
+   const [searchIn, setSearchIn] = useState(searchParams.get('searchIn') || 'all');
    const [search, setSearch] = useState(searchParams.get('q') || '');
 
    const reset = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       setOrder('empty');
       setSearch('');
-      formRef.current?.requestSubmit();
+      setSearchIn('all');
+
+      router.push(`${pathname}`);
+      setTimeout(() => {
+         formRef.current?.requestSubmit();
+      }, 0);
    };
 
-   const onSubmit = () => {
+   const submit = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
       const query = new URLSearchParams();
       if (order !== 'empty') {
-         query.set('f', order);
+         query.set('order', order);
       }
       if (search !== '') {
          query.set('q', search);
       }
-      if (query) {
-         return router.push(`${pathname}?${query}`);
+      if (searchIn !== 'all') {
+         query.set('searchIn', searchIn);
       }
-      console.log('call');
-      router.push(`${pathname}`);
+
+      router.push(`${pathname}?${query.toString()}`);
+
+      if (!query.toString()) {
+         return;
+      }
+
+      formRef.current?.requestSubmit();
    };
 
    return (
-      <form ref={formRef} action={formAction} onSubmit={onSubmit}>
+      <form ref={formRef} action={formAction}>
          <div className="card grid h-20 place-items-center">
             <div className="flex">
                <div className="join">
@@ -54,19 +68,30 @@ export default function BooksForm({ books, suggestionList }: any) {
                         onChange={e => setSearch(e.target.value)}
                      />
                      <datalist id="suggestion-list">
-                        {suggestionList.map((item: any, key: number) => (
+                        {suggestionList.map((item: string, key: number) => (
                            <option key={key} value={item}></option>
                         ))}
                      </datalist>
                   </label>
                   <select
                      className="join-item select select-bordered"
+                     defaultValue={searchIn}
+                     name="searchIn"
+                     onChange={e => setSearchIn(e.target.value)}
+                  >
+                     <option value="all">All</option>
+                     <option value="author">By author</option>
+                     <option value="book">Book Title</option>
+                     <option value="series">Series Title</option>
+                  </select>
+                  <select
+                     className="join-item select select-bordered"
                      defaultValue={order}
-                     name="f"
+                     name="order"
                      onChange={e => setOrder(e.target.value)}
                   >
                      <option disabled value="empty">
-                        Filter
+                        Order
                      </option>
                      <option value="asc">Ascending</option>
                      <option value="desc">Descending</option>
@@ -77,7 +102,7 @@ export default function BooksForm({ books, suggestionList }: any) {
                            x
                         </button>
                      )}
-                     <button type="submit" className="btn join-item btn-neutral">
+                     <button className="btn join-item btn-neutral" onClick={submit}>
                         Apply
                      </button>
                   </div>
