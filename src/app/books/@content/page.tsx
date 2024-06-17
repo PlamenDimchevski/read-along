@@ -17,8 +17,8 @@ export default async function BookContent({ searchParams }: { searchParams: Quer
             <tr className="hover" key={item.id}>
                <th>{item.id}</th>
                <td>{item.name}</td>
-               <td>{item.bookSeries?.name}</td>
-               <td>{item.bookSeries?.author}</td>
+               <td className="hidden sm:table-cell">{item.bookSeries?.name}</td>
+               <td className="hidden sm:table-cell">{item.bookSeries?.author}</td>
                <td>{bookStatusList[item.status].title}</td>
                <td>
                   <div className="dropdown dropdown-end">

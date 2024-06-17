@@ -10,8 +10,8 @@ export default function RootLayout({
             <tr>
                <th></th>
                <th>Book</th>
-               <th>Series</th>
-               <th>Author</th>
+               <th className="hidden sm:table-cell">Series</th>
+               <th className="hidden sm:table-cell">Author</th>
                <th>Status</th>
                <th></th>
             </tr>

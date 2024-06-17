@@ -22,7 +22,7 @@ export default function RootLayout({
                   <div className="card grid place-items-center">{filterForm}</div>
                   <div className="divider"></div>
                   <div className="grid h-full">
-                     <div className="overflow-x-auto">{content}</div>
+                     <div className="overflow-x-auto pb-48">{content}</div>
                   </div>
                </div>
             </div>
