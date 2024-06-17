@@ -1,12 +1,12 @@
 'use client';
-import { QueryOptions } from '@/types/books';
+import { BookSorting, QueryOptions } from '@/types/books';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 export default function BooksForm() {
    const queryPrams = useSearchParams();
    const searchParams: QueryOptions = {
       q: queryPrams.get('q') || '',
-      order: queryPrams.get('order') as 'desc' | 'asc' | null,
+      order: (queryPrams.get('order') || 'empty') as BookSorting,
       searchIn: queryPrams.get('searchIn') || 'all',
    };
 
@@ -41,7 +41,7 @@ export default function BooksForm() {
             </select>
             <select
                className="join-item select select-bordered hidden sm:inline-flex"
-               defaultValue={searchParams.order || 'empty'}
+               defaultValue={searchParams.order}
                name="order"
             >
                <option disabled value="empty">

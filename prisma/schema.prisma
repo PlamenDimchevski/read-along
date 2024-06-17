@@ -20,8 +20,8 @@ model BookSeries {
   updatedAt   DateTime   @updatedAt
   name        String
   author      String
-  description String
-  status      BookStatus @default(ONGOING)
+  description String?
+  status      BookStatus @default(COMPLETED)
   books       Books[]
 
   @@unique([id])
@@ -33,7 +33,7 @@ model Books {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   name         String
-  status       BookStatus  @default(ONGOING)
+  status       BookStatus  @default(COMPLETED)
   chapters     Chapters[]
   character    Character[]
   bookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])

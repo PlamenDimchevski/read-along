@@ -14,6 +14,7 @@ export default function RootLayout({
    return (
       <div className="flex min-h-screen flex-col bg-base-200">
          <Navigation />
+         {modal}
          <main className="flex grow justify-center">
             <div className="max-w-screen-xl p-2">
                <div className="flex h-full w-full flex-col">
@@ -26,7 +27,6 @@ export default function RootLayout({
                </div>
             </div>
          </main>
-         {modal}
       </div>
    );
 }

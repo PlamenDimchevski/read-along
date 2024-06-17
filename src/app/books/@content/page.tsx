@@ -3,6 +3,7 @@ import EllipsisVerticalIcon from '@heroicons/react/24/outline/esm/EllipsisVertic
 import Link from 'next/link';
 import { getBooks } from '../actions';
 import { notFound } from 'next/navigation';
+import { bookStatusList } from '@/lib/constants';
 export default async function BookContent({ searchParams }: { searchParams: QueryOptions }) {
    const books = await getBooks(searchParams);
 
@@ -18,7 +19,7 @@ export default async function BookContent({ searchParams }: { searchParams: Quer
                <td>{item.name}</td>
                <td>{item.bookSeries?.name}</td>
                <td>{item.bookSeries?.author}</td>
-               <td>{item.status}</td>
+               <td>{bookStatusList[item.status].title}</td>
                <td>
                   <div className="dropdown dropdown-end">
                      <div tabIndex={index} role="button" className="btn m-1">

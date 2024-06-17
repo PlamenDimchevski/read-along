@@ -3,7 +3,7 @@ import AddBook from '@/app/books/add/page';
 
 export default function AddBookModal() {
    return (
-      <Modal>
+      <Modal basePath="/books">
          <AddBook />
       </Modal>
    );

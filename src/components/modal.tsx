@@ -1,21 +1,22 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export default function Modal({ children }: { children: React.ReactNode }) {
-   const router = useRouter();
+export default function Modal({ children, basePath }: { children: React.ReactNode; basePath: string }) {
+   const pathname = usePathname();
+
+   if (pathname === basePath) {
+      return '';
+   }
+
    return (
       <div>
          <dialog className="modal modal-open">
             <div className="modal-box w-11/12 max-w-5xl">
-               <button
-                  className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
-                  onClick={() => {
-                     router.back();
-                  }}
-               >
+               <Link href={basePath} className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
                   ✕
-               </button>
+               </Link>
 
                {children}
             </div>

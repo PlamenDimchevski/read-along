@@ -3,7 +3,7 @@ import Modal from '@/components/modal';
 
 export default function EditBookModal() {
    return (
-      <Modal>
+      <Modal basePath="/books">
          <DeleteBook />
       </Modal>
    );
