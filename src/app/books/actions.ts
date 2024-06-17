@@ -71,7 +71,7 @@ export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]>
                : []),
          ],
       },
-      orderBy: { createdAt: order },
+      orderBy: { createdAt: order || 'desc' },
       include: { bookSeries: true },
    });
    return books;
