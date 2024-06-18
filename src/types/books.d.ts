@@ -11,6 +11,23 @@ export type BooksSuggestion = Prisma.BooksGetPayload<{
    select: { name: true; id: true; bookSeries: { select: { id: true; name: true; author: true } } };
 }>;
 
+export type BookCompleteData = Prisma.BooksGetPayload<{
+   where: { id: { equals: id } };
+   select: {
+      id: true;
+      name: true;
+      bookSeries: {
+         select: {
+            id: true;
+            name: true;
+            books: { select: { id: true; name: true } };
+            character: { select: { id: true; name: true } };
+         };
+      };
+      chapters: { select: { id: true; title: true } };
+   };
+}>;
+
 export type ProcessedContent = {
    title: string;
    content: string;

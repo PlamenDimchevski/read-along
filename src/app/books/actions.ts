@@ -30,6 +30,27 @@ export async function getTextsForSuggestions(): Promise<string[]> {
    }
 }
 
+export async function getBook(id: number) {
+   const book = await db.books.findFirst({
+      where: { id: { equals: id } },
+      select: {
+         id: true,
+         name: true,
+         bookSeries: {
+            select: {
+               id: true,
+               name: true,
+               books: { select: { id: true, name: true } },
+               character: { select: { id: true, name: true } },
+            },
+         },
+         chapters: { select: { id: true, title: true } },
+      },
+   });
+
+   return book;
+}
+
 export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]> {
    const query = searchParams.q;
    const order = searchParams.order !== 'empty' ? searchParams.order : 'desc';
@@ -168,7 +189,43 @@ export async function addBook(initialState: BookFormData, formData: FormData) {
    await db.chapters.createMany({ data: contentList.map(item => ({ ...item, bookId: book.id })) });
 
    revalidatePath('/books');
+   revalidatePath('/book');
    redirect('/books');
 
    return { ...initialState, success: true, status: true, message: '' };
+}
+
+export async function deleteBook(initialState: null, formData: FormData) {
+   const transactionList = [];
+   const bookID = parseInt(formData.get('bookID') as string, 10);
+   const seriesID = parseInt(formData.get('seriesID') as string, 10);
+
+   if (!bookID) {
+      throw new Error("Couldn't find book Id for deletion.");
+   }
+
+   const deletingChapters = db.chapters.deleteMany({
+      where: { bookId: bookID },
+   });
+
+   const deletingBook = db.books.delete({ where: { id: bookID } });
+
+   transactionList.push(deletingChapters);
+   transactionList.push(deletingBook);
+
+   if (!!seriesID) {
+      const deletingCharacter = db.character.deleteMany({ where: { bookSeriesId: seriesID } });
+      const deletingSeries = db.bookSeries.delete({ where: { id: seriesID } });
+
+      transactionList.push(deletingCharacter);
+      transactionList.push(deletingSeries);
+   }
+
+   await db.$transaction(transactionList);
+
+   revalidatePath('/books');
+   revalidatePath('/book');
+   redirect('/books');
+
+   return null;
 }

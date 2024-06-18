@@ -15,14 +15,15 @@ datasource db {
 }
 
 model BookSeries {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   name        String
   author      String
   description String?
-  status      BookStatus @default(COMPLETED)
+  status      BookStatus  @default(COMPLETED)
   books       Books[]
+  character   Character[]
 
   @@unique([id])
   @@index([name, id])
@@ -35,7 +36,6 @@ model Books {
   name         String
   status       BookStatus  @default(COMPLETED)
   chapters     Chapters[]
-  character    Character[]
   bookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])
   bookSeriesId Int?
 
@@ -60,15 +60,15 @@ model Chapters {
 }
 
 model Character {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  description String?
-  color       String
-  imageUrl    String?
-  Books       Books    @relation(fields: [booksId], references: [id])
-  booksId     Int
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  name         String
+  description  String?
+  color        String
+  imageUrl     String?
+  BookSeries   BookSeries? @relation(fields: [bookSeriesId], references: [id])
+  bookSeriesId Int?
 
   @@unique([id])
   @@index([name, id])

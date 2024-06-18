@@ -1,6 +1,6 @@
 import BookForm from '../components/form';
 
-export default function EditBook() {
+export default function EditBook({ params }: { params: { id: string } }) {
    return (
       <form className="flex flex-col gap-4">
          <h3 className="text-lg font-bold">Edit book</h3>
