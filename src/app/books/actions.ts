@@ -36,10 +36,12 @@ export async function getBook(id: number) {
       select: {
          id: true,
          name: true,
+         status: true,
          bookSeries: {
             select: {
                id: true,
                name: true,
+               author: true,
                books: { select: { id: true, name: true } },
                character: { select: { id: true, name: true } },
             },
@@ -193,6 +195,17 @@ export async function addBook(initialState: BookFormData, formData: FormData) {
    redirect('/books');
 
    return { ...initialState, success: true, status: true, message: '' };
+}
+
+export async function editBook(initialState: BookFormData, formData: FormData) {
+   const seriesName = (formData.get('series') || '') as string;
+   const bookName = (formData.get('name') || '') as string;
+   const author = (formData.get('author') || '') as string;
+   const status = (formData.get('status') || BookStatus.COMPLETED) as BookStatus;
+   console.log({ id: initialState.data.id, seriesID: initialState.data.seriesId }, formData);
+   if (seriesName.trim() !== initialState.content?.bookSeries?.name) {
+   }
+   return initialState;
 }
 
 export async function deleteBook(initialState: null, formData: FormData) {

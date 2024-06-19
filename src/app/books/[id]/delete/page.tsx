@@ -42,10 +42,7 @@ function BookSeriesCharacterDeletion({ bookData }: { bookData: BookCompleteData 
                   <tbody>
                      {bookData?.bookSeries?.character.map(item => (
                         <tr key={item.id}>
-                           <td>
-                              {item.name}
-                              <input type="hidden" value={item.id} name="charactersIDs" />
-                           </td>
+                           <td>{item.name}</td>
                         </tr>
                      ))}
                   </tbody>
@@ -84,10 +81,7 @@ export default async function DeleteBook({ params }: { params: { id: string } })
                      <tbody>
                         {bookData?.chapters.map(item => (
                            <tr key={item.id}>
-                              <td>
-                                 {item.title}
-                                 <input type="hidden" value={item.id} name="chaptersIDs" />
-                              </td>
+                              <td>{item.title}</td>
                            </tr>
                         ))}
                      </tbody>

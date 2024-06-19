@@ -16,17 +16,19 @@ export type BookCompleteData = Prisma.BooksGetPayload<{
    select: {
       id: true;
       name: true;
+      status: true;
       bookSeries: {
          select: {
             id: true;
             name: true;
+            author: true;
             books: { select: { id: true; name: true } };
             character: { select: { id: true; name: true } };
          };
       };
       chapters: { select: { id: true; title: true } };
    };
-}>;
+}> | null;
 
 export type ProcessedContent = {
    title: string;
@@ -34,9 +36,8 @@ export type ProcessedContent = {
 };
 
 export type BooksSuggestionsContent = {
-   author: string[];
-   book: string[];
-   series: string[];
+   book: { id: number | undefined; name: string | undefined }[];
+   series: { id: number | undefined; name: string | undefined; author: string | undefined }[];
 };
 
 type FieldError = {
@@ -57,11 +58,14 @@ export type BookFormData = {
    status: boolean;
    success: boolean;
    data: {
+      id?: number;
+      seriesId?: number;
       name: string;
       author: string;
       status: BookStatus;
       series: string;
       content?: string;
    };
+   content?: BookCompleteData;
    errors: BookFormFieldErrors;
 };

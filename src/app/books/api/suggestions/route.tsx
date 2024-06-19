@@ -7,18 +7,19 @@ export async function GET() {
    return NextResponse.json(
       data.reduce(
          (content: BooksSuggestionsContent, item: BooksSuggestion) => {
-            if (!content.author.includes(item.bookSeries?.author || '')) {
-               content.author.push(item.bookSeries?.author || '');
+            if (!content.series.find(element => item.bookSeries?.id === element.id)) {
+               content.series.push({
+                  name: item.bookSeries?.name,
+                  id: item.bookSeries?.id,
+                  author: item.bookSeries?.author,
+               });
             }
-            if (!content.series.includes(item.bookSeries?.name || '')) {
-               content.series.push(item.bookSeries?.name || '');
-            }
-            if (!content.book.includes(item.name)) {
-               content.book.push(item.name);
+            if (!content.book.find(element => item.id === element.id)) {
+               content.book.push({ name: item.name, id: item.id });
             }
             return content;
          },
-         { author: [], book: [], series: [] }
+         { book: [], series: [] }
       )
    );
 }

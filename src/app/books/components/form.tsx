@@ -1,33 +1,34 @@
 'use client';
 
 import { bookStatusList } from '@/lib/constants';
-import { BooksSuggestionsContent } from '@/types/books';
+import { BookCompleteData, BooksSuggestionsContent } from '@/types/books';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-function Description() {
-   return (
-      <p className="py-4">
-         If the book name and the series name are the same, you can leave this field empty. If left empty, it will
-         automatically be filled with the book name upon saving.
-      </p>
-   );
-}
+import Description from './description';
+import { Loading } from './loading';
 
-function Loading() {
-   return (
-      <>
-         <Description />
-         <div className="skeleton h-12 w-full"></div>
-         <div className="skeleton h-12 w-full"></div>
-         <div className="skeleton h-12 w-full"></div>
-         <div className="skeleton h-12 w-full"></div>
-      </>
-   );
-}
-
-export default function BookForm() {
+export default function BookForm({ data }: { data?: BookCompleteData }) {
    const { pending } = useFormStatus();
-   const [suggestions, setSuggestions] = useState<BooksSuggestionsContent>({ author: [], book: [], series: [] });
+   const [suggestions, setSuggestions] = useState<BooksSuggestionsContent>({ book: [], series: [] });
+   const [seriesData, setSeriesData] = useState({
+      name: data?.bookSeries?.name,
+      author: data?.bookSeries?.author,
+   });
+
+   const handelUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const searchName = event.target.name === 'series' ? 'name' : 'author';
+      const relatedName = event.target.name === 'series' ? 'author' : 'name';
+      const value = event.target.value;
+      const selectedSeries = suggestions.series.find(item => item[searchName] === seriesData[searchName]);
+
+      console.log(
+         selectedSeries,
+         selectedSeries?.[relatedName],
+         seriesData[relatedName],
+         selectedSeries && selectedSeries?.[relatedName] !== seriesData[relatedName]
+      );
+      setSeriesData(state => ({ ...state, [searchName]: value }));
+   };
 
    useEffect(() => {
       fetch('/books/api/suggestions')
@@ -44,19 +45,27 @@ export default function BookForm() {
          <Description />
          <label className="input input-bordered flex items-center gap-2">
             Name
-            <input type="text" name="name" className="grow" required />
+            <input type="text" name="name" className="grow" defaultValue={data?.name} required />
          </label>
          <label className="input input-bordered flex items-center gap-2">
             Author
-            <input list="book-author-list" type="author" name="author" className="grow" required />
+            <input
+               list="book-author-list"
+               type="author"
+               name="author"
+               className="grow"
+               defaultValue={seriesData.author}
+               onChange={handelUpdate}
+               required
+            />
             <datalist id="book-author-list">
-               {suggestions.author.map((item, key) => (
-                  <option key={key} value={item}></option>
+               {[...new Map(suggestions.series.map(item => [item['author'], item])).values()].map(item => (
+                  <option key={item.id} value={item.author}></option>
                ))}
             </datalist>
          </label>
 
-         <select className="select select-bordered w-full" name="status" defaultValue="">
+         <select className="select select-bordered w-full" name="status" defaultValue={data?.status || ''}>
             <option value="" disabled>
                Status
             </option>
@@ -69,12 +78,19 @@ export default function BookForm() {
 
          <label className="input input-bordered flex items-center gap-2">
             Book Series
-            <input list="book-series-list" type="text" className="grow" name="series" />
+            <input
+               list="book-series-list"
+               type="text"
+               className="grow"
+               name="series"
+               defaultValue={seriesData.name}
+               onChange={handelUpdate}
+            />
             <kbd className="kbd kbd-xs hidden sm:inline-flex">Optional</kbd>
             <kbd className="kbd kbd-xs sm:hidden">*</kbd>
             <datalist id="book-series-list">
-               {suggestions.series.map((item, key) => (
-                  <option key={key} value={item}></option>
+               {suggestions.series.map(item => (
+                  <option key={item.id} value={item.name}></option>
                ))}
             </datalist>
          </label>
