@@ -10,25 +10,6 @@ import { Loading } from './loading';
 export default function BookForm({ data }: { data?: BookCompleteData }) {
    const { pending } = useFormStatus();
    const [suggestions, setSuggestions] = useState<BooksSuggestionsContent>({ book: [], series: [] });
-   const [seriesData, setSeriesData] = useState({
-      name: data?.bookSeries?.name,
-      author: data?.bookSeries?.author,
-   });
-
-   const handelUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const searchName = event.target.name === 'series' ? 'name' : 'author';
-      const relatedName = event.target.name === 'series' ? 'author' : 'name';
-      const value = event.target.value;
-      const selectedSeries = suggestions.series.find(item => item[searchName] === seriesData[searchName]);
-
-      console.log(
-         selectedSeries,
-         selectedSeries?.[relatedName],
-         seriesData[relatedName],
-         selectedSeries && selectedSeries?.[relatedName] !== seriesData[relatedName]
-      );
-      setSeriesData(state => ({ ...state, [searchName]: value }));
-   };
 
    useEffect(() => {
       fetch('/books/api/suggestions')
@@ -47,16 +28,19 @@ export default function BookForm({ data }: { data?: BookCompleteData }) {
             Name
             <input type="text" name="name" className="grow" defaultValue={data?.name} required />
          </label>
-         <label className="input input-bordered flex items-center gap-2">
+         <label
+            className={`input input-bordered flex items-center gap-2 ${!!data?.bookSeries?.author ? 'tooltip' : ''}`}
+            data-tip="Note: Changes to the author will be ignored here. To update the author, please visit the Series page."
+         >
             Author
             <input
                list="book-author-list"
                type="author"
                name="author"
                className="grow"
-               defaultValue={seriesData.author}
-               onChange={handelUpdate}
+               defaultValue={data?.bookSeries?.author}
                required
+               disabled={!!data?.bookSeries?.author}
             />
             <datalist id="book-author-list">
                {[...new Map(suggestions.series.map(item => [item['author'], item])).values()].map(item => (
@@ -83,8 +67,7 @@ export default function BookForm({ data }: { data?: BookCompleteData }) {
                type="text"
                className="grow"
                name="series"
-               defaultValue={seriesData.name}
-               onChange={handelUpdate}
+               defaultValue={data?.bookSeries?.name}
             />
             <kbd className="kbd kbd-xs hidden sm:inline-flex">Optional</kbd>
             <kbd className="kbd kbd-xs sm:hidden">*</kbd>

@@ -200,11 +200,20 @@ export async function addBook(initialState: BookFormData, formData: FormData) {
 export async function editBook(initialState: BookFormData, formData: FormData) {
    const seriesName = (formData.get('series') || '') as string;
    const bookName = (formData.get('name') || '') as string;
-   const author = (formData.get('author') || '') as string;
    const status = (formData.get('status') || BookStatus.COMPLETED) as BookStatus;
    console.log({ id: initialState.data.id, seriesID: initialState.data.seriesId }, formData);
    if (seriesName.trim() !== initialState.content?.bookSeries?.name) {
+      await db.bookSeries.update({ where: { id: initialState.content?.bookSeries?.id }, data: { name: seriesName } });
    }
+
+   const updateBook = await db.books.update({
+      where: { id: initialState.content?.id },
+      data: { name: bookName, status: status },
+   });
+
+   revalidatePath('/books');
+   revalidatePath('/book');
+   redirect('/books');
    return initialState;
 }
 
