@@ -16,7 +16,7 @@ export default function RootLayout({
          <Navigation />
          {modal}
          <main className="flex grow justify-center">
-            <div className="max-w-screen-xl p-2">
+            <div className="w-full max-w-screen-xl p-2">
                <div className="flex h-full w-full flex-col">
                   {children}
                   <div className="card grid place-items-center">{filterForm}</div>

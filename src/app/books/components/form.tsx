@@ -35,7 +35,7 @@ export default function BookForm({ data }: { data?: BookCompleteData }) {
             Author
             <input
                list="book-author-list"
-               type="author"
+               type="text"
                name="author"
                className="grow"
                defaultValue={data?.bookSeries?.author}

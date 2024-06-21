@@ -1,95 +1,34 @@
-import Link from 'next/link';
+import { getBook } from '@/app/books/actions';
+import { ChapterStatus } from '@prisma/client';
 
-export default function Book() {
+export default async function Book({ params }: { params: { bookId: string } }) {
+   const bookData = await getBook(parseInt(params.bookId, 10));
+
    return (
-      <div className="flex w-full flex-col">
-         <div className="card grid h-20 place-items-center">
-            <form>
-               <div className="join">
-                  <label className="input join-item input-bordered flex items-center gap-2">
-                     <input type="text" className="grow" placeholder="Search" />
-                  </label>
-                  <select className="join-item select select-bordered" defaultValue={'empty'}>
-                     <option disabled value={'empty'}>
-                        Filter
-                     </option>
-                     <option>Ascending</option>
-                     <option>Descending</option>
-                  </select>
-                  <div className="indicator">
-                     <button className="badge indicator-item">x</button>
-                     <button className="btn join-item btn-neutral">Apply</button>
-                  </div>
+      <div className="max-w-full">
+         <h1 className="text-2xl font-bold">Books content</h1>
+         <div className="stats mb-2 mt-2 w-full shadow">
+            <div className="stat place-items-center">
+               <div className="stat-title">Book Name</div>
+               <div className="stat-desc">{bookData?.name}</div>
+            </div>
+
+            <div className="stat place-items-center">
+               <div className="stat-title">Series name</div>
+               <div className="stat-desc">{bookData?.bookSeries?.name}</div>
+            </div>
+            <div className="stat place-items-center">
+               <div className="stat-title">Author</div>
+               <div className="stat-desc">{bookData?.bookSeries?.author}</div>
+            </div>
+
+            <div className="stat place-items-center">
+               <div className="stat-title">Read chapters</div>
+               <div className="stat-value">
+                  {bookData?.chapters.filter(item => item.status == ChapterStatus.READ).length}
                </div>
-               <Link href="/books/add" className="btn btn-neutral ml-3" prefetch={true}>
-                  Add new book
-               </Link>
-            </form>
-         </div>
-         <div className="divider"></div>
-         <div className="grid">
-            <table className="table">
-               {/* head */}
-               <thead>
-                  <tr>
-                     <th></th>
-                     <th>Book</th>
-                     <th>Chapters</th>
-                     <th>Read chapters</th>
-                     <th>Status</th>
-                     <th></th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr className="hover">
-                     <th>1</th>
-                     <td>Ascendance of a Bookworm Part 1 Volume 1</td>
-                     <td>7</td>
-                     <td>3</td>
-                     <td>ONGOING</td>
-                     <td>
-                        <div className="dropdown dropdown-hover">
-                           <div tabIndex={0} role="button" className="btn m-1">
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth="1.5"
-                                 stroke="currentColor"
-                                 className="size-6"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                                 />
-                              </svg>
-                           </div>
-                           <ul
-                              tabIndex={0}
-                              className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
-                           >
-                              <li>
-                                 <Link href="/book/1/view" prefetch={true}>
-                                    View chapters
-                                 </Link>
-                              </li>
-                              <li>
-                                 <Link href="/book/1/add" prefetch={true}>
-                                    Add chapters
-                                 </Link>
-                              </li>
-                              <li>
-                                 <Link href="/book/1/delete" prefetch={true}>
-                                    Delete Book
-                                 </Link>
-                              </li>
-                           </ul>
-                        </div>
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
+               <div className="stat-desc">in total {bookData?.chapters.length}</div>
+            </div>
          </div>
       </div>
    );

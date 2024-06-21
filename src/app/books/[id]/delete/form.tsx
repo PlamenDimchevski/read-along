@@ -32,14 +32,13 @@ function ProcessingDeletion({ closeModal }: { closeModal: (event: React.MouseEve
 
 export default function DeleteBookForm({ children }: Readonly<{ children: React.ReactNode }>) {
    const confirmation = useRef<HTMLDialogElement | null>(null);
-   const [state, formAction] = useFormState(deleteBook, null);
    const closeModal = (event: React.MouseEvent<HTMLElement>) => {
       event.preventDefault();
       confirmation.current?.close();
    };
    return (
       <>
-         <form action={formAction}>
+         <form action={deleteBook}>
             <div className="flex flex-col gap-4">
                {children}
                <div className="modal-action">

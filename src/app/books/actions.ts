@@ -46,7 +46,7 @@ export async function getBook(id: number) {
                character: { select: { id: true, name: true } },
             },
          },
-         chapters: { select: { id: true, title: true } },
+         chapters: { select: { id: true, title: true, status: true } },
       },
    });
 
@@ -125,6 +125,16 @@ function processContent(content: string): ProcessedContent[] {
 }
 
 export async function addBook(initialState: BookFormData, formData: FormData) {
+   if (
+      !formData?.has('name') ||
+      !formData?.has('author') ||
+      !formData?.has('content') ||
+      !initialState?.errors ||
+      !initialState?.status
+   ) {
+      throw new Error('Received incorrect parameters or wrong type parameters');
+   }
+
    const seriesName = (formData.get('series') || '') as string;
    const bookName = (formData.get('name') || '') as string;
    const author = (formData.get('author') || '') as string;
@@ -198,15 +208,35 @@ export async function addBook(initialState: BookFormData, formData: FormData) {
 }
 
 export async function editBook(initialState: BookFormData, formData: FormData) {
+   if (
+      !formData?.has('name') ||
+      !initialState?.content?.bookSeries?.id ||
+      !initialState?.content?.bookSeries?.name ||
+      !initialState?.content?.id ||
+      !initialState?.errors
+   ) {
+      throw new Error('Received incorrect parameters or wrong type parameters');
+   }
+
    const seriesName = (formData.get('series') || '') as string;
    const bookName = (formData.get('name') || '') as string;
    const status = (formData.get('status') || BookStatus.COMPLETED) as BookStatus;
-   console.log({ id: initialState.data.id, seriesID: initialState.data.seriesId }, formData);
+
+   if (bookName.trim().length === 0) {
+      initialState.errors.name = { error: true, message: 'Book name is required, please add book name' };
+   }
+
+   if (Object.values(initialState.errors).some(item => item.error)) {
+      initialState.status = false;
+      initialState.message = 'Please review';
+      return initialState;
+   }
+
    if (seriesName.trim() !== initialState.content?.bookSeries?.name) {
       await db.bookSeries.update({ where: { id: initialState.content?.bookSeries?.id }, data: { name: seriesName } });
    }
 
-   const updateBook = await db.books.update({
+   await db.books.update({
       where: { id: initialState.content?.id },
       data: { name: bookName, status: status },
    });
@@ -214,10 +244,14 @@ export async function editBook(initialState: BookFormData, formData: FormData) {
    revalidatePath('/books');
    revalidatePath('/book');
    redirect('/books');
-   return initialState;
+   return { ...initialState, success: true, status: true, message: '' };
 }
 
-export async function deleteBook(initialState: null, formData: FormData) {
+export async function deleteBook(formData: FormData) {
+   if (!formData?.has('bookID')) {
+      throw new Error('Received incorrect parameters or wrong type parameters');
+   }
+
    const transactionList = [];
    const bookID = parseInt(formData.get('bookID') as string, 10);
    const seriesID = parseInt(formData.get('seriesID') as string, 10);
@@ -248,6 +282,4 @@ export async function deleteBook(initialState: null, formData: FormData) {
    revalidatePath('/books');
    revalidatePath('/book');
    redirect('/books');
-
-   return null;
 }

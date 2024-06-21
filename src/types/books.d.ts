@@ -23,7 +23,7 @@ export type BookCompleteData = Prisma.BooksGetPayload<{
             name: true;
             author: true;
             books: { select: { id: true; name: true } };
-            character: { select: { id: true; name: true } };
+            character: { select: { id: true; name: true; status: true } };
          };
       };
       chapters: { select: { id: true; title: true } };
