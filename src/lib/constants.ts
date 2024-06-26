@@ -1,4 +1,5 @@
 import { BookFormData } from '@/types/books';
+import { AddChaptersFormData } from '@/types/chapters';
 import { BookStatus, ChapterProgress, ChapterStatus } from '@prisma/client';
 
 const fieldError = { error: false, message: null };
@@ -58,4 +59,12 @@ export const chapterProgress = {
       value: ChapterProgress.READY,
       title: 'Ready',
    },
+};
+
+export const addChaptersFormData: AddChaptersFormData = {
+   bookId: 0,
+   chapters: [],
+   status: true,
+   errors: '',
+   message: '',
 };

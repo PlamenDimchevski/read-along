@@ -1,11 +1,11 @@
 'use server';
 
 import db from '@/lib/db';
-import sanitizeHtml from 'sanitize-html';
-import { BookFormData, BooksSuggestion, BooksType, ProcessedContent, QueryOptions } from '@/types/books';
+import { BookFormData, BooksSuggestion, BooksType, QueryOptions } from '@/types/books';
 import { BookStatus } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { processContent } from '@/lib/contentParser';
 
 export async function getNamesForSuggestion(): Promise<BooksSuggestion[]> {
    return await db.books.findMany({
@@ -98,30 +98,6 @@ export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]>
       include: { bookSeries: true },
    });
    return books;
-}
-
-function processContent(content: string): ProcessedContent[] {
-   const sanitizedContent: string = sanitizeHtml(content, {
-      allowedTags: ['b', 'i', 'em', 'strong', 'p', 'h1'],
-      allowedAttributes: {},
-      allowedIframeHostnames: [],
-      parser: {
-         lowerCaseTags: true,
-      },
-   });
-   return sanitizedContent.split('<h1>').reduce((chapters: ProcessedContent[], chapter: string): ProcessedContent[] => {
-      if (!chapter.trim()) {
-         return chapters;
-      }
-      const [title, content] = chapter.split('</h1>');
-      return [
-         ...chapters,
-         {
-            title,
-            content,
-         },
-      ];
-   }, []);
 }
 
 export async function addBook(initialState: BookFormData, formData: FormData) {

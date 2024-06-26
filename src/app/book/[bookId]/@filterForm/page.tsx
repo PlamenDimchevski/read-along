@@ -56,7 +56,7 @@ export default function BooksForm({ params }: { params: { bookId: string } }) {
             </div>
          </div>
 
-         <Link href="/books/add" className="btn btn-neutral" prefetch={true}>
+         <Link href={`/book/${params.bookId}/add`} className="btn btn-neutral" prefetch={true}>
             Add chapters
          </Link>
       </form>

@@ -30,11 +30,6 @@ export type BookCompleteData = Prisma.BooksGetPayload<{
    };
 }> | null;
 
-export type ProcessedContent = {
-   title: string;
-   content: string;
-};
-
 export type BooksSuggestionsContent = {
    book: { id: number | undefined; name: string | undefined }[];
    series: { id: number | undefined; name: string | undefined; author: string | undefined }[];
