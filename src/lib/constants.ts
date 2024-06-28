@@ -60,11 +60,3 @@ export const chapterProgress = {
       title: 'Ready',
    },
 };
-
-export const addChaptersFormData: AddChaptersFormData = {
-   bookId: 0,
-   chapters: [],
-   status: true,
-   errors: '',
-   message: '',
-};

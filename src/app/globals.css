@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.read-along-content-editor[contenteditable='false'] {
+   background-color: transparent;
+}

@@ -1,9 +1,9 @@
-import EditBook from '@/app/books/[id]/page';
+import EditBook from '@/app/book/[bookId]/[id]/page';
 import Modal from '@/components/modal';
 
-export default function EditBookModal({ params }: { params: { id: string } }) {
+export default function EditBookModal({ params }: { params: { bookId: string; id: string } }) {
    return (
-      <Modal basePath="^/book/[0-9]*$">
+      <Modal basePath={`/book/${params.bookId}`}>
          <EditBook params={params} />
       </Modal>
    );

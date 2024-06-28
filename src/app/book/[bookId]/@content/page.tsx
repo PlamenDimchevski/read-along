@@ -35,17 +35,17 @@ export default async function BookContent({
                         className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
                      >
                         <li>
-                           <Link href={`/book/${item.id}`} prefetch={true}>
+                           <Link href={`/book/${item.bookId}/${item.id}/read`} prefetch={true}>
                               Open
                            </Link>
                         </li>
                         <li>
-                           <Link href={`/books/${item.id}`} prefetch={true}>
+                           <Link href={`/book/${item.bookId}/${item.id}`} prefetch={true}>
                               Edit
                            </Link>
                         </li>
                         <li>
-                           <Link href={`/books/${item.id}/delete`} prefetch={true}>
+                           <Link href={`/book/${item.bookId}/${item.id}/delete`} prefetch={true}>
                               Delete
                            </Link>
                         </li>

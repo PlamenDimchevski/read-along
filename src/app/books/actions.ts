@@ -31,8 +31,8 @@ export async function getTextsForSuggestions(): Promise<string[]> {
 }
 
 export async function getBook(id: number) {
-   const book = await db.books.findFirst({
-      where: { id: { equals: id } },
+   const book = await db.books.findUnique({
+      where: { id },
       select: {
          id: true,
          name: true,

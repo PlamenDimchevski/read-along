@@ -4,7 +4,6 @@ import { processContent } from '@/lib/contentParser';
 import db from '@/lib/db';
 import { AddChaptersElement, AddChaptersFormData, QueryOptions } from '@/types/chapters';
 import { Prisma } from '@prisma/client';
-import { error } from 'console';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -17,6 +16,11 @@ export async function getChapters(id: number, searchParams?: QueryOptions) {
       orderBy: { createdAt: 'desc' },
    });
    return chapters;
+}
+
+export async function getChapter(bookId: number, chapterId: number) {
+   const chapter = await db.chapters.findUnique({ where: { id: chapterId, bookId } });
+   return chapter;
 }
 
 export async function processChaptersForAdding(initialState: AddChaptersFormData, formData: FormData) {
@@ -108,4 +112,8 @@ export async function addChapters(initialState: AddChaptersFormData, formData: F
    redirect(`/book/${initialState.bookId}`);
 
    return { ...initialState };
+}
+
+export async function updateChapter(formData: FormData) {
+   console.log(formData);
 }
