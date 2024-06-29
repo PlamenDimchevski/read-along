@@ -169,7 +169,7 @@ export function ChapterContent({
 
          <div ref={controlsRef} className="join absolute w-min" style={{ opacity: 0, visibility: 'hidden' }}>
             <button type="button" className="btn join-item btn-neutral btn-xs" onClick={markContent}>
-               Add
+               Mark
             </button>
             <select
                defaultValue={''}
