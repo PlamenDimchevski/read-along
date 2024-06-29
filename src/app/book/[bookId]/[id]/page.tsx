@@ -12,7 +12,7 @@ export default async function EditChapter({ params }: { params: { bookId: string
             Chapter name
             <input type="text" name="name" className="grow" defaultValue={chapter?.title} required />
          </label>
-         <ChapterContent content={chapter?.content} />
+         <ChapterContent content={chapter?.content} characters={chapter?.book.bookSeries?.character} />
          <div className="grid gap-2 sm:grid-flow-col">
             <select className="select select-bordered" name="status" defaultValue={chapter?.status || ''}>
                <option value="" disabled>

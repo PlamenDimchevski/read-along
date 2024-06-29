@@ -19,7 +19,18 @@ export async function getChapters(id: number, searchParams?: QueryOptions) {
 }
 
 export async function getChapter(bookId: number, chapterId: number) {
-   const chapter = await db.chapters.findUnique({ where: { id: chapterId, bookId } });
+   const chapter = await db.chapters.findUnique({
+      where: { id: chapterId, bookId },
+      select: {
+         id: true,
+         title: true,
+         content: true,
+         status: true,
+         progress: true,
+         aiProcessed: true,
+         book: { select: { name: true, id: true, bookSeries: { select: { id: true, character: true } } } },
+      },
+   });
    return chapter;
 }
 
