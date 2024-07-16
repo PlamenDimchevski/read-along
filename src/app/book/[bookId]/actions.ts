@@ -1,9 +1,11 @@
 'use server';
 
-import { processContent } from '@/lib/contentParser';
+import ai_result from '@/lib/ai_result';
+import { breakContentToBaches, processJSON, requestHighlight } from '@/lib/aiTools';
+import { highlightContent, processColoredContent, processContent } from '@/lib/contentParser';
 import db from '@/lib/db';
 import { AddChaptersElement, AddChaptersFormData, QueryOptions } from '@/types/chapters';
-import { Prisma } from '@prisma/client';
+import { Character, Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -125,6 +127,29 @@ export async function addChapters(initialState: AddChaptersFormData, formData: F
    return { ...initialState };
 }
 
-export async function updateChapter(formData: FormData) {
-   console.log(formData);
+export async function updateChapter(initialState: any, formData: FormData) {
+   console.log('updateChapter', { initialState, formData });
+   await new Promise(res => setTimeout(() => res(null), 1000));
+   return initialState;
+}
+
+export async function processWithAI(formData: FormData) {
+   const content = formData.get('content') as string;
+   let characters: Character[] = [];
+   try {
+      characters = JSON.parse(formData.get('characters') as string);
+   } catch (e) {}
+
+   const lines = processColoredContent(content);
+
+   // const request = breakContentToBaches(lines).map(requestHighlight);
+   // const result = await Promise.all(request)
+   const result = await new Promise(res => setTimeout(() => res(ai_result), 1000))
+      .then(data => (data || []).map(item => processJSON(item)))
+      .then(data => data.flat())
+      .then(data => data.filter((value, index, self) => index === self.findIndex(t => t.text === value.text)));
+
+   const highlightedContent = highlightContent(content, result, characters);
+
+   return highlightedContent;
 }

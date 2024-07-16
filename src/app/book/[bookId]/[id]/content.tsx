@@ -3,6 +3,7 @@
 import { BookOpenIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Character } from '@prisma/client';
 import { useEffect, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 
 function hideTools(element: HTMLDivElement | null, button?: HTMLButtonElement | null) {
    if (!element) {
@@ -26,6 +27,7 @@ export function ChapterContent({
    content: string | undefined;
    characters: Character[] | undefined;
 }) {
+   const { pending } = useFormStatus();
    // Utilize refs instead of adding states, to avoid losing selection on state update / rerender
    const contentRef = useRef<HTMLDivElement>(null);
    const controlsRef = useRef<HTMLDivElement>(null);
@@ -145,6 +147,7 @@ export function ChapterContent({
       if (!contentRef.current?.innerHTML) {
          return;
       }
+
       setChapterContent(contentRef.current?.innerHTML);
    };
 
@@ -156,6 +159,10 @@ export function ChapterContent({
          document.removeEventListener('selectionchange', onSelectionChange);
       };
    }, []);
+
+   useEffect(() => {
+      setChapterContent(content);
+   }, [content]);
 
    return (
       <article className="indicator prose w-auto">
@@ -194,15 +201,18 @@ export function ChapterContent({
                Remove
             </button>
          </div>
+         {pending ? (
+            <div className="skeleton h-96 w-full"></div>
+         ) : (
+            <div
+               ref={contentRef}
+               className="read-along-content-editor textarea textarea-bordered whitespace-pre-line"
+               contentEditable={edit}
+               dangerouslySetInnerHTML={{ __html: chapterContent || '' }}
+            ></div>
+         )}
 
-         <div
-            ref={contentRef}
-            className="read-along-content-editor textarea textarea-bordered whitespace-pre-line"
-            contentEditable={edit}
-            dangerouslySetInnerHTML={{ __html: chapterContent || '' }}
-            onInput={contentChange}
-         ></div>
-         <textarea ref={contentText} name="content" className="hidden" defaultValue={chapterContent}></textarea>
+         <textarea ref={contentText} name="content" className="hidden" readOnly value={chapterContent}></textarea>
       </article>
    );
 }
