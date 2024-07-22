@@ -60,3 +60,5 @@ export const chapterProgress = {
       title: 'Ready',
    },
 };
+
+export const defaultFormValues = { name: '', author: '', status: BookStatus.ONGOING };

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
-import { deleteBook } from '../../actions';
+import { useFormStatus } from 'react-dom';
+import { deleteSeries } from '../../actions';
 
 function ProcessingDeletion({ closeModal }: { closeModal: (event: React.MouseEvent<HTMLElement>) => void }) {
    const { pending } = useFormStatus();
@@ -30,7 +30,7 @@ function ProcessingDeletion({ closeModal }: { closeModal: (event: React.MouseEve
    );
 }
 
-export default function DeleteBookForm({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function DeleteSeriesForm({ children }: Readonly<{ children: React.ReactNode }>) {
    const confirmation = useRef<HTMLDialogElement | null>(null);
    const closeModal = (event: React.MouseEvent<HTMLElement>) => {
       event.preventDefault();
@@ -38,7 +38,7 @@ export default function DeleteBookForm({ children }: Readonly<{ children: React.
    };
    return (
       <>
-         <form action={deleteBook}>
+         <form action={deleteSeries}>
             <div className="flex flex-col gap-4">
                {children}
                <div className="modal-action">

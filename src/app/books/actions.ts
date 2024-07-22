@@ -55,6 +55,7 @@ export async function getBook(id: number) {
 
 export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]> {
    const query = searchParams.q;
+   const seriesId = Number(searchParams.series);
    const order = searchParams.order !== 'empty' ? searchParams.order : 'desc';
    const searchIn = searchParams.searchIn || 'all';
 
@@ -93,6 +94,8 @@ export async function getBooks(searchParams: QueryOptions): Promise<BooksType[]>
                  ]
                : []),
          ],
+
+         ...(seriesId ? { bookSeriesId: { equals: seriesId } } : {}),
       },
       orderBy: { createdAt: order || 'desc' },
       include: { bookSeries: true },

@@ -5,7 +5,7 @@ export type BooksType = Prisma.BooksGetPayload<{ include: { bookSeries: true } }
 export type BookSorting = Prisma.SortOrder | 'empty';
 export type BookSearch = 'all' | 'author' | 'book' | 'series';
 
-export type QueryOptions = { q?: string; order?: Prisma.SortOrder | 'empty'; searchIn?: string };
+export type QueryOptions = { q?: string; order?: Prisma.SortOrder | 'empty'; searchIn?: string; series?: number };
 
 export type BooksSuggestion = Prisma.BooksGetPayload<{
    select: { name: true; id: true; bookSeries: { select: { id: true; name: true; author: true } } };

@@ -12,37 +12,49 @@ export default function Navigation() {
                </div>
                <ul tabIndex={0} className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
                   <li>
-                     <a>Books</a>
+                     <Link href="/books" prefetch={true}>
+                        Books
+                     </Link>
                   </li>
                   <li>
-                     <a>Books Series</a>
+                     <Link href="/series">Books Series</Link>
                   </li>
                   <li>
-                     <a>Help</a>
+                     <Link href="/help">Help</Link>
+                  </li>
+                  <li>
+                     <Link href="/game">Gewinnen</Link>
                   </li>
                </ul>
             </div>
          </div>
          <div className="flex-1">
-            <a className="btn btn-ghost text-xl">Book Club</a>
+            <Link href="/" className="btn btn-ghost text-xl">
+               Book Club
+            </Link>
          </div>
          <nav className="flex-none">
             <ul className="menu menu-horizontal hidden px-1 sm:inline-flex">
                <li>
-                  <a>Books</a>
+                  <Link href="/books" prefetch={true}>
+                     Books
+                  </Link>
                </li>
                <li>
-                  <a>Books Series</a>
+                  <Link href="/series">Books Series</Link>
                </li>
                <li>
-                  <a>Help</a>
+                  <Link href="/help">Help</Link>
+               </li>
+               <li>
+                  <Link href="/game">Gewinnen</Link>
                </li>
                <li>
                   <details>
                      <summary>Actions</summary>
                      <ul className="rounded-t-none bg-base-100 p-2">
                         <li>
-                           <Link href="/books/add" className="btn btn-ghost btn-xs" prefetch={true}>
+                           <Link href="/books/add" prefetch={true}>
                               Add book
                            </Link>
                         </li>
@@ -64,7 +76,7 @@ export default function Navigation() {
                   <ul tabIndex={0} className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
                      <ul className="rounded-t-none bg-base-100 p-2">
                         <li>
-                           <Link href="/books/add" className="btn btn-ghost btn-xs" prefetch={true}>
+                           <Link href="/books/add" prefetch={true}>
                               Add book
                            </Link>
                         </li>

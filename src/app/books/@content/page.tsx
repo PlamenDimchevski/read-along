@@ -17,7 +17,11 @@ export default async function BookContent({ searchParams }: { searchParams: Quer
             <tr className="hover" key={item.id}>
                <th>{item.id}</th>
                <td>{item.name}</td>
-               <td className="hidden sm:table-cell">{item.bookSeries?.name}</td>
+               <td className="hidden sm:table-cell">
+                  <Link href={`/books?series=${item.bookSeries?.id}`} className="btn btn-sm">
+                     {item.bookSeries?.name}
+                  </Link>
+               </td>
                <td className="hidden sm:table-cell">{item.bookSeries?.author}</td>
                <td>{bookStatusList[item.status].title}</td>
                <td>
