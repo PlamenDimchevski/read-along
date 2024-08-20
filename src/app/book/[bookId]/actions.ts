@@ -145,7 +145,7 @@ export async function processWithAI(formData: FormData) {
    // const request = breakContentToBaches(lines).map(requestHighlight);
    // const result = await Promise.all(request)
    const result = await new Promise(res => setTimeout(() => res(ai_result), 1000))
-      .then(data => (data || []).map(item => processJSON(item)))
+      .then(data => (data || []).map(item => processJSON(String(item))))
       .then(data => data.flat())
       .then(data => data.filter((value, index, self) => index === self.findIndex(t => t.text === value.text)));
 
